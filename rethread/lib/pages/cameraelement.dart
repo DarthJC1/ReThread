@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:rethread/pages/summarypage.dart';
 
-class CameraPage extends StatefulWidget {
-  const CameraPage({super.key});
+class Cameraelement extends StatefulWidget {
+  const Cameraelement({super.key});
 
   @override
-  CameraPageState createState() => CameraPageState();
+  CameraelementState createState() => CameraelementState();
 }
 
-class CameraPageState extends State<CameraPage> {
+class CameraelementState extends State<Cameraelement> {
   CameraController? controller;
   List<CameraDescription>? cameras;
 

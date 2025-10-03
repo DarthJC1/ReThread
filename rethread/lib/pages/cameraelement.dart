@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'dart:math' as math;
 import 'package:rethread/pages/summarypage.dart';
 
 class Cameraelement extends StatefulWidget {
@@ -31,12 +32,17 @@ class CameraelementState extends State<Cameraelement> {
     if (!controller!.value.isInitialized) return;
     final image = await controller!.takePicture();
 
-    // disini harusnya masukin ke ai baru pindah ke page baru
+    // disini harusnya masukin ke ai baru pindah ke page baru, tapi sementara pakai randomizer aja dulu
+    final math.Random random = math.Random();
+    int ehe = random.nextInt(3);
 
+    // ini pindah ke summary page tapi sebelum itu usahain summary page dikasi tau prediksinya apa
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Summarypage(),
+        
+
+        builder: (context) => Summarypage(prediction: ehe,),
       ),
     );
     // print("Photo saved to: ${image.path}");

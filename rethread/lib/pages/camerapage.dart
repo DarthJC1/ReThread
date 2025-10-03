@@ -10,6 +10,8 @@ class Camerapage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Camera Page'),
       ),
+      
+      // masukkan cameraelement
       body: Cameraelement(
 
       )

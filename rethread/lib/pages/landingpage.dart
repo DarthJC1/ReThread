@@ -12,6 +12,7 @@ class LandingPage extends StatelessWidget {
         title: const Text('Landing Page'),
       ),
       body: 
+        // buat container button (anggap aja div buat tombol scanning)
         Container(
           child: ElevatedButton(
             onPressed: () {

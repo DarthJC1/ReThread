@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'dart:io';
 
 class Summarypage extends StatelessWidget {
-  final int prediction; // <-- field to store the value
+  final int prediction;
+  final String imagePath;
+  final String classification;
+  final String aiDescription;
 
   const Summarypage({
     super.key,
-    required this.prediction, // <-- constructor
+    required this.prediction, 
+    required this.imagePath,
+    required this.classification,
+    required this.aiDescription,
   });
 
   @override
@@ -15,10 +21,59 @@ class Summarypage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Summary Page'),
       ),
-      body: 
-            prediction == 0 ? Text("Oke, kayaknya ini udah agak lusuh dan sulit dipakai ulang. Tapi jangan sedih! 🧵♻️ Baju ini masih bisa direcycle loh! Misalnya dijadikan kain lap, bahan kerajinan, atau bahkan diolah lagi jadi serat tekstil baru. Jadi walaupun udah nggak kepake buat dipakai sehari-hari, bajumu masih bisa punya ‘kehidupan kedua’. 🌱") :
-            prediction == 1 ? Text("✨ Eits, tunggu dulu… Bajumu masih kece banget nih 👕✨ Daripada direcycle, baju ini lebih cocok buat reuse. Kamu bisa pakai lagi, sumbangkan ke orang yang butuh, atau bahkan dijual biar nambah cuan 💸. Sayang banget kalau langsung dihancurin, kan?") :
-            Text("⚠️ Uh-oh… Sepertinya bajumu udah melewati masa jayanya 😢👕 Kondisinya susah banget buat reuse atau recycle. Jadi opsi terbaik sekarang adalah remove/dispose dengan cara yang ramah lingkungan, misalnya setor ke bank sampah atau layanan pengelolaan tekstil. Jangan langsung buang ke TPA ya, biar nggak nambahin limbah sembarangan 🌍.")
-      );
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Display the captured image
+            if (imagePath.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  File(imagePath),
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            const SizedBox(height: 16),
+            
+            // Classification
+            Text(
+              'Classification: $classification',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            
+            // Prediction index
+            Text(
+              'Prediction: $prediction',
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // AI Description
+            const Text(
+              'AI Description:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              aiDescription,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

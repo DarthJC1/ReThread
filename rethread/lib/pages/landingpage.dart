@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rethread/pages/cameraelement.dart';
-import 'package:rethread/pages/camerapage.dart';
+import 'package:rethread/widgets/CameraWidget.dart';
+import 'package:rethread/pages/CameraPage.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -12,21 +12,18 @@ class LandingPage extends StatelessWidget {
         title: const Text('Landing Page'),
       ),
       body: 
-        // buat container button (anggap aja div buat tombol scanning)
         Container(
           child: ElevatedButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Camerapage()));
+              Camerapage();
             },
-            child: Text("Start Scanning your Clothes!", textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ),
-                          ),
             style: ElevatedButton.styleFrom(
               // alignment: Alignment.center,
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(100),
               backgroundColor: Colors.cyanAccent,
             ),
+            child: Text("Scan your Clothes!", textAlign: TextAlign.center,),
           ),
         ),
     );

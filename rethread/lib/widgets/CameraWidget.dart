@@ -4,16 +4,18 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:rethread/pages/summarypage.dart';
+import 'package:rethread/common/colors.dart';
+import 'package:rethread/pages/SummaryPage.dart';
+import 'package:rethread/templates/TemplateBackground.dart';
 
-class Cameraelement extends StatefulWidget {
-  const Cameraelement({super.key});
+class CameraWidget extends StatefulWidget {
+  const CameraWidget({super.key});
 
   @override
-  CameraelementState createState() => CameraelementState();
+  CamerawidgetState createState() => CamerawidgetState();
 }
 
-class CameraelementState extends State<Cameraelement> {
+class CamerawidgetState extends State<CameraWidget> {
   CameraController? controller;
   List<CameraDescription>? cameras;
   bool isProcessing = false;
@@ -151,41 +153,55 @@ class CameraelementState extends State<Cameraelement> {
     if (controller == null || !controller!.value.isInitialized) {
       return Center(child: CircularProgressIndicator());
     }
-    return Container(
-      height: 720,
-      child: Stack(
-        children: [
-          CameraPreview(controller!),
-          if (isProcessing)
-            Container(
-              color: Colors.black54,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(color: Colors.white),
-                    SizedBox(height: 16),
-                    Text(
-                      'Processing image...',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+    return 
+      Container(
+        height: 600,
+        width: 440,
+        child: Stack(
+          children: [
+            CameraPreview(controller!),
+            if (isProcessing)
+              Container(
+                color: Colors.black54,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(color: Colors.white),
+                      SizedBox(height: 16),
+                      Text(
+                        'Processing image...',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                child: ElevatedButton(
+                  onPressed: isProcessing ? null : _takePhoto,
+                  style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
+                    backgroundColor: buttonBlue,
+                    fixedSize: const Size(70, 70),
+                    foregroundColor: Colors.black,
+                    padding: EdgeInsets.zero, // Remove default padding
+                  ),
+                  child: const Center( // Wrap icon with Center
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: 30,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: FloatingActionButton(
-                onPressed: isProcessing ? null : _takePhoto,
-                backgroundColor: isProcessing ? Colors.grey : null,
-                child: Icon(Icons.camera_alt),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+
+      );
+        
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rethread/pages/cameraelement.dart';
+import 'package:rethread/common/colors.dart';
+import 'package:rethread/templates/TemplateBackground.dart';
+import 'package:rethread/widgets/CameraWidget.dart';
 
 class Camerapage extends StatelessWidget {
   const Camerapage({super.key});
@@ -8,13 +10,14 @@ class Camerapage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Camera Page'),
+        backgroundColor: backgroundBlue,
       ),
       
-      // masukkan cameraelement
-      body: Cameraelement(
-
+      body: Stack(
+        children: [TemplateBackground01(),CameraWidget()],
       )
-    );
+            
+
+      );
   }
 }

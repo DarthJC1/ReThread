@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:rethread/common/colors.dart';
 import 'package:rethread/pages/SummaryPage.dart';
 import 'package:rethread/templates/TemplateBackground.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CameraWidget extends StatefulWidget {
   const CameraWidget({super.key});
@@ -43,10 +44,11 @@ class CamerawidgetState extends State<CameraWidget> {
       
       // Determine MIME type (adjust based on your test image)
       final mimeType = 'image/jpeg'; // Change to 'image/png' if using PNG
-      
-      // Replace with your actual Gemini API key
-      const apiKey = 'AIzaSyDdHWM4jSugiEzW_fQAGYqD2ihQ4R0UNg4';
-      
+
+      await dotenv.load(fileName: "config.env");
+      final apiKey = dotenv.env['GEMINI_API_KEY'];
+
+
       // Prepare API request for Gemini
       final response = await http.post(
         Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$apiKey'),
@@ -67,7 +69,7 @@ class CamerawidgetState extends State<CameraWidget> {
                   'text': 
                   // 'Describe what you see'
                       'This image has been classified as: $classification. '
-                      'Please provide a detailed description of this clothing item, if there are damages in the clothing describe them'
+                      'Please provide a detailed description of this clothing item, if there are damages in the clothing describe them, use only regular font, NO bold underline and other form of irregular use of font'
                       'Estimate compensation in Rupiah they get if they turn this clothes in based on the classification and your observation and end it with please find our nearest vendor to ascertain the compensation'
                 }
               ]
@@ -159,7 +161,9 @@ class CamerawidgetState extends State<CameraWidget> {
         width: 440,
         child: Stack(
           children: [
-            CameraPreview(controller!),
+            OverflowBox(
+              child: CameraPreview(controller!), 
+            ),
             if (isProcessing)
               Container(
                 color: Colors.black54,
@@ -180,6 +184,7 @@ class CamerawidgetState extends State<CameraWidget> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
+                margin: const EdgeInsets.only(bottom: 15),
                 child: ElevatedButton(
                   onPressed: isProcessing ? null : _takePhoto,
                   style: ElevatedButton.styleFrom(
@@ -191,7 +196,7 @@ class CamerawidgetState extends State<CameraWidget> {
                   ),
                   child: const Center( // Wrap icon with Center
                     child: Icon(
-                      Icons.camera_alt,
+                      Icons.camera_alt_outlined,
                       size: 30,
                     ),
                   ),

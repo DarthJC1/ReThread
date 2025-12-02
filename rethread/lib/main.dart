@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rethread/pages/CameraPage.dart';
+import 'package:rethread/pages/LLM_test.dart';
 import 'package:rethread/pages/LandingPage.dart';
+import 'package:rethread/pages/TestingPage.dart';
 import 'package:rethread/templates/TemplateBackground.dart';
 
 void main() {
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Camerapage(),
+      home: LandingPage(),
 
     );
 

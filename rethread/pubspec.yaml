@@ -47,6 +47,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_dotenv: ^5.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,11 +71,17 @@ flutter:
   # https://flutter.dev/to/asset-from-package
   assets:
   - assets/images/
-  # fonts:
-  # - family: Livvic
-  #   fonts:
-  #     - asset: fonts/Livvic/Livvic-Regular.ttf
-  #     - asset: fonts/Livvic/Livvic-SemiBold.ttf
+  - config.env
+  fonts:
+  - family: Livvic
+    fonts:
+      - asset: assets/fonts/Livvic/Livvic-Regular.ttf
+      - asset: assets/fonts/Livvic/Livvic-SemiBold.ttf
+  - family: Geist
+    fonts:
+      - asset: assets/fonts/Geist/Geist-VariableFont_wght.ttf
+  
+  
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

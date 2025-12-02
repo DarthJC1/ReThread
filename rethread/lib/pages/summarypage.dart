@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import 'package:rethread/common/colors.dart';
+import 'package:rethread/common/fonts.dart';
+import 'package:rethread/templates/TemplateBackground.dart';
+import 'package:rethread/widgets/SummaryDescWidget.dart';
+import 'package:rethread/widgets/navbar.dart';
+
 class Summarypage extends StatelessWidget {
   final int prediction;
   final String imagePath;
@@ -19,61 +25,20 @@ class Summarypage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Summary Page'),
+          iconTheme: IconThemeData(
+          color: Colors.white, // Warna yang kamu inginkan
+        ),
+        title: Text('Summary', style: PrevPageText,),
+        backgroundColor: backgroundBlue,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: 
+        Stack(
           children: [
-            // Display the captured image
-            if (imagePath.isNotEmpty)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  File(imagePath),
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            const SizedBox(height: 16),
-            
-            // Classification
-            Text(
-              'Classification: $classification',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            
-            // Prediction index
-            Text(
-              'Prediction: $prediction',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // AI Description
-            const Text(
-              'AI Description:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              aiDescription,
-              style: const TextStyle(fontSize: 16),
-            ),
+            TemplateBackground01(),
+            SummaryDescWidget(prediction: prediction, imagePath: imagePath, classification: classification, aiDescription: aiDescription),
           ],
         ),
-      ),
+      bottomNavigationBar: Navbar(),
     );
   }
 }

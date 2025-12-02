@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rethread/common/colors.dart';
 import 'package:rethread/templates/TemplateBackground.dart';
 import 'package:rethread/widgets/CameraWidget.dart';
+import 'package:rethread/widgets/navbar.dart';
 
 class Camerapage extends StatelessWidget {
   const Camerapage({super.key});
@@ -10,12 +11,28 @@ class Camerapage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: backgroundBlue,
       ),
       
-      body: Stack(
-        children: [TemplateBackground01(),CameraWidget()],
+      body: 
+      Container(
+        color: backgroundBlue,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Stack(
+              children: [
+                TemplateBackground01(),
+                CameraWidget()
+                ],
+            ),
+            Navbar(),
+            ],
+        ),
       )
+      
+      
             
 
       );

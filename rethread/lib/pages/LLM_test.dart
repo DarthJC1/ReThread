@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LlmTest extends StatefulWidget {
   const LlmTest({super.key});
@@ -38,8 +39,10 @@ class _LlmTestState extends State<LlmTest> {
       // Determine MIME type (adjust based on your test image)
       final mimeType = 'image/jpeg'; // Change to 'image/png' if using PNG
       
-      // Replace with your actual Gemini API key
-      const apiKey = 'AIzaSyDdHWM4jSugiEzW_fQAGYqD2ihQ4R0UNg4';
+      await dotenv.load(fileName: "config.env");
+      final apiKey = dotenv.env['GEMINI_API_KEY'];
+      print(apiKey != null ? "found" : "not found");
+      // final apiKey ="AIzaSyA3nw8X8rsdjlz8eRBBg34WGwVuFogiYIY";
       
       // Prepare API request for Gemini
       final response = await http.post(
@@ -99,7 +102,7 @@ class _LlmTestState extends State<LlmTest> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/images/images.jpg',
+                          'assets/images/images.jpeg',
                           width: 300,
                         ),
                         const SizedBox(height: 20),

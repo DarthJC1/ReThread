@@ -5,6 +5,7 @@ import 'package:rethread/common/colors.dart';
 import 'package:rethread/common/fonts.dart';
 import 'package:rethread/templates/TemplateBackground.dart';
 import 'package:rethread/widgets/SummaryDescWidget.dart';
+import 'package:rethread/widgets/navbar.dart';
 
 class Summarypage extends StatelessWidget {
   final int prediction;
@@ -24,7 +25,7 @@ class Summarypage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
+          iconTheme: IconThemeData(
           color: Colors.white, // Warna yang kamu inginkan
         ),
         title: Text('Summary', style: PrevPageText,),
@@ -36,7 +37,8 @@ class Summarypage extends StatelessWidget {
             TemplateBackground01(),
             SummaryDescWidget(prediction: prediction, imagePath: imagePath, classification: classification, aiDescription: aiDescription),
           ],
-        )
+        ),
+      bottomNavigationBar: Navbar(),
     );
   }
 }

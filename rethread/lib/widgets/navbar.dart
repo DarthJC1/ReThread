@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:rethread/common/colors.dart';
 import 'package:rethread/pages/LandingPage.dart';
 
+
+
 class Navbar extends StatelessWidget {
   const Navbar({super.key});
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +70,7 @@ class Navbar extends StatelessWidget {
             // color: Colors.red, 
             child: FloatingActionButton(
               onPressed: () {
-                  LandingPage();
+                  exit(0);
                 },
               foregroundColor: Colors.white,
               backgroundColor: navbarBlack,

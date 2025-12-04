@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rethread/widgets/CameraWidget.dart';
-import 'package:rethread/pages/CameraPage.dart';
+import 'package:rethread/common/colors.dart';
+import 'package:rethread/templates/TemplateBackground.dart';
+import 'package:rethread/widgets/LandingWidget.dart';
+import 'package:rethread/widgets/navbar.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -9,23 +11,24 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Landing Page'),
+        automaticallyImplyLeading: false,
+        backgroundColor: backgroundBlue,
       ),
       body: 
-        Container(
-          child: ElevatedButton(
-            onPressed: () {
-              Camerapage();
-            },
-            style: ElevatedButton.styleFrom(
-              // alignment: Alignment.center,
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(100),
-              backgroundColor: Colors.cyanAccent,
-            ),
-            child: Text("Scan your Clothes!", textAlign: TextAlign.center,),
+          Stack(
+            children: [
+              TemplateBackground01(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  LandingButton(),
+                  Navbar(),
+                  ],
+              )
+              
+            ],
           ),
-        ),
-    );
+      );
+      
   }
 }

@@ -1,54 +1,95 @@
-// import 'package:flutter/material.dart';
+import 'dart:io';
 
-// class RoleInfoWidget extends StatelessWidget {
-//   final String role;
-//   const RoleInfoWidget({super.key, required this.role});
+import 'package:flutter/material.dart';
+import 'package:rethread/common/colors.dart';
+import 'package:rethread/pages/HistoryPage.dart';
+import 'package:rethread/pages/LandingPage.dart';
 
-//   @override
-//   Widget build(BuildContext context) {
-//     String description;
-//     if (role == 'Business Owner') {
-//       description = 'List your shop, upload products, and reach more customers.';
-//     } else if (role == 'Shopper') {
-//       description = 'Find nearby shops, order items, and get quick delivery.';
-//     } else {
-//       description = 'Deliver local orders and earn from short-distance trips.';
-//     }
 
-//     return Container(
-//       padding: const EdgeInsets.symmetric(horizontal: 60),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Text(role, style: RoleTitle, textAlign: TextAlign.center),
-//           Text(description, style: DefaultCaption, textAlign: TextAlign.center),
 
-//           const SizedBox(height: 300),
+class Navbar extends StatelessWidget {
+  const Navbar({super.key});
 
-//           SizedBox(
-//             width: 220,
-//             height: 50,
-//             child: ElevatedButton(
-//               style: ElevatedButton.styleFrom(
-//                 backgroundColor: BaseYellow,
-//                 foregroundColor: Colors.black,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(20),
-//                 ),
-//               ),
-//               onPressed: () {
-//                 Navigator.push(
-//                       context,
-//                       MaterialPageRoute(builder: (context) => Welcomepage()),
-//                     );
-//               },
-              
-//               child: Text('Start', style: DefaultCaption),
-              
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  
+
+  @override
+  Widget build(BuildContext context) {
+
+  return Container(
+      height: 90,
+      color: navbarBlack,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Distribusi merata
+        children: [
+          Container(
+            width: 70,
+            height: 70,
+            // color: Colors.red, 
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LandingPage()),
+                );
+              },
+              foregroundColor: Colors.white,
+              backgroundColor: navbarBlack,
+              elevation: 0,
+
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Icon(Icons.home_outlined, size: 35,),
+                Text("Home"),
+              ],
+              ),
+            ),// Contoh
+          ),
+          Container(
+            width: 70,
+            height: 70,
+            // color: Colors.red, 
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()),
+                );
+              },
+              foregroundColor: Colors.white,
+              backgroundColor: navbarBlack,
+              elevation: 0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Icon(Icons.folder_outlined , size: 35,),
+                Text("History"),
+              ],
+              ),
+            ),// Contoh
+          ),
+          Container(
+            width: 70,
+            height: 70,
+            // color: Colors.red, 
+            child: FloatingActionButton(
+              onPressed: () {
+                  exit(0);
+                },
+              foregroundColor: Colors.white,
+              backgroundColor: navbarBlack,
+              elevation: 0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Icon(Icons.logout_outlined, size: 35,),
+                Text("Exit", textAlign: TextAlign.center,),
+              ],
+              ),
+            ),// Contoh
+          ),
+        ],
+      ),
+    );
+  }
+}

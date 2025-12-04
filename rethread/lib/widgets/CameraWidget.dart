@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:rethread/common/colors.dart';
+import 'package:rethread/database/Database.dart';
 import 'package:rethread/pages/SummaryPage.dart';
 import 'package:rethread/templates/TemplateBackground.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -112,6 +113,12 @@ class CamerawidgetState extends State<CameraWidget> {
       // KALAU KAMU NANYA IMAGENYA DAPET DARI MANA SETELAH DI AMBIL, PAKAI 'image.path' YAAA
       final description = await _getAIDescription(image.path, classification);
       
+      await ScanHistoryDatabase.instance.insertScan(
+        imagePath: image.path,
+        classification: classification,
+        aiDescription: description,
+      );
+
       // Resume preview before navigation
       await controller!.resumePreview();
       
@@ -121,7 +128,6 @@ class CamerawidgetState extends State<CameraWidget> {
         context,
         MaterialPageRoute(
           builder: (context) => Summarypage(
-            prediction: 0, // Replace with actual prediction index
             imagePath: image.path,
             classification: classification,
             aiDescription: description,

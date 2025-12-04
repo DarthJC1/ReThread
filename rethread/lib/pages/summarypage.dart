@@ -8,14 +8,12 @@ import 'package:rethread/widgets/SummaryDescWidget.dart';
 import 'package:rethread/widgets/navbar.dart';
 
 class Summarypage extends StatelessWidget {
-  final int prediction;
   final String imagePath;
   final String classification;
   final String aiDescription;
 
   const Summarypage({
     super.key,
-    required this.prediction, 
     required this.imagePath,
     required this.classification,
     required this.aiDescription,
@@ -35,7 +33,7 @@ class Summarypage extends StatelessWidget {
         Stack(
           children: [
             TemplateBackground01(),
-            SummaryDescWidget(prediction: prediction, imagePath: imagePath, classification: classification, aiDescription: aiDescription),
+            SummaryDescWidget(imagePath: imagePath, classification: classification, aiDescription: aiDescription),
           ],
         ),
       bottomNavigationBar: Navbar(),

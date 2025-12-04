@@ -6,14 +6,12 @@ import 'package:rethread/common/fonts.dart';
 import 'package:rethread/pages/CameraPage.dart';
 
 class SummaryDescWidget extends StatelessWidget {
-  final int prediction;
   final String imagePath;
   final String classification;
   final String aiDescription;
 
   const SummaryDescWidget({
     super.key,
-    required this.prediction, 
     required this.imagePath,
     required this.classification,
     required this.aiDescription,

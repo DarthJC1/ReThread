@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:rethread/common/colors.dart';
+import 'package:rethread/pages/HistoryPage.dart';
 import 'package:rethread/pages/LandingPage.dart';
 
 
@@ -50,8 +51,11 @@ class Navbar extends StatelessWidget {
             // color: Colors.red, 
             child: FloatingActionButton(
               onPressed: () {
-                  LandingPage();
-                },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()),
+                );
+              },
               foregroundColor: Colors.white,
               backgroundColor: navbarBlack,
               elevation: 0,

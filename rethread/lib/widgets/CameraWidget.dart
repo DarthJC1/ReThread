@@ -91,6 +91,42 @@ class CamerawidgetState extends State<CameraWidget> {
     }
   }
 
+  Future<String?> _predictClothingFromAPI(File imageFile) async {
+    try {
+      // LOCAL API (emulator)
+      // final uri = Uri.parse("http://10.0.2.2:8000/predict");
+
+      // REAL DEPLOYED API
+      final uri = Uri.parse("http://10.0.2.2:8000/predict");
+
+      var request = http.MultipartRequest("POST", uri);
+
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "image",
+          imageFile.path,
+        ),
+      );
+
+      var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
+      print("STATUS: ${response.statusCode}");
+      print("BODY: $responseBody");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(responseBody);
+        return data["prediction"]; // e.g. "shirt", "pants", "dress"
+      } else {
+        print("API Error: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      print("Error sending to API: $e");
+      return null;
+    }
+  }
+
+
   Future<void> _takePhoto() async {
     if (!controller!.value.isInitialized || isProcessing) return;
     
@@ -103,16 +139,23 @@ class CamerawidgetState extends State<CameraWidget> {
       await controller!.pausePreview();
       
       final image = await controller!.takePicture();
+      final imageFile = File(image.path);
+
+      final classification = await _predictClothingFromAPI(imageFile);
+
+      if (classification == null) {
+        throw Exception("Failed to classify image");
+      }
+
+      print("Classification: $classification");
       
       // TODO: Replace this with your actual classification model
       // For now using mock classifications
-      final classifications = ['shirt', 'pants', 'dress'];
-      final classification = classifications[0]; // Replace with actual model prediction
       
       // Get AI description
       // KALAU KAMU NANYA IMAGENYA DAPET DARI MANA SETELAH DI AMBIL, PAKAI 'image.path' YAAA
       final description = await _getAIDescription(image.path, classification);
-      
+
       await ScanHistoryDatabase.instance.insertScan(
         imagePath: image.path,
         classification: classification,
@@ -149,6 +192,8 @@ class CamerawidgetState extends State<CameraWidget> {
       });
     }
   }
+
+
 
   @override
   void dispose() {

@@ -26,6 +26,7 @@ class Navbar extends StatelessWidget {
             height: 70,
             // color: Colors.red, 
             child: FloatingActionButton(
+              heroTag: 'nav_home',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -50,6 +51,7 @@ class Navbar extends StatelessWidget {
             height: 70,
             // color: Colors.red, 
             child: FloatingActionButton(
+              heroTag: 'nav_history',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -73,6 +75,7 @@ class Navbar extends StatelessWidget {
             height: 70,
             // color: Colors.red, 
             child: FloatingActionButton(
+              heroTag: 'nav_exit',
               onPressed: () {
                   exit(0);
                 },

@@ -19,6 +19,8 @@ class CameraWidget extends StatefulWidget {
 
 class CamerawidgetState extends State<CameraWidget> {
   CameraController? controller;
+  String? selectedValue;
+  final List<String> items = ['Deep Learning Model', 'Classical Feature Extraction'];
   List<CameraDescription>? cameras;
   bool isProcessing = false;
 
@@ -126,7 +128,6 @@ class CamerawidgetState extends State<CameraWidget> {
     }
   }
 
-
   Future<void> _takePhoto() async {
     if (!controller!.value.isInitialized || isProcessing) return;
     
@@ -140,8 +141,13 @@ class CamerawidgetState extends State<CameraWidget> {
       
       final image = await controller!.takePicture();
       final imageFile = File(image.path);
+      
+      final classification = null;
 
-      final classification = await _predictClothingFromAPI(imageFile);
+      if (selectedValue == "Classical Feature Extraction"){final classification = await _predictClothingFromAPI(imageFile);}
+      // MASUKIN SINI YA CODINGAN MODEL DEEPLEARNINGNYA
+      else{final classification = await _predictClothingFromAPI(imageFile);}
+      // final classification = "ehe";
 
       if (classification == null) {
         throw Exception("Failed to classify image");
@@ -193,8 +199,6 @@ class CamerawidgetState extends State<CameraWidget> {
     }
   }
 
-
-
   @override
   void dispose() {
     controller?.dispose();
@@ -207,7 +211,10 @@ class CamerawidgetState extends State<CameraWidget> {
       return Center(child: CircularProgressIndicator());
     }
     return 
-      Container(
+    Column(
+      
+      children: [
+        Container(
         height: 600,
         width: 440,
         child: Stack(
@@ -254,10 +261,28 @@ class CamerawidgetState extends State<CameraWidget> {
                 ),
               ),
             ),
+            
           ],
         ),
 
-      );
-        
+      ),
+        DropdownButton<String>(
+              value: selectedValue,
+              hint: Text('Select an option'),
+              isExpanded: true,
+              items: items.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedValue = newValue;
+                });
+              },
+            ),
+      ],
+    );  
   }
 }

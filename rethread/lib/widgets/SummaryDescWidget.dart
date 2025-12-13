@@ -31,7 +31,7 @@ class SummaryDescWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: Image.file(
                   File(imagePath),
-                  width: double.infinity,
+                  height: 400,
                   fit: BoxFit.cover,
                 ),
               ),

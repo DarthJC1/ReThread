@@ -14,27 +14,18 @@ class Camerapage extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: backgroundBlue,
       ),
-      
+      bottomNavigationBar: Navbar(),
       body: 
-      Container(
-        color: backgroundBlue,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
             Stack(
               children: [
                 TemplateBackground01(),
                 CameraWidget()
+                  
                 ],
             ),
-            Navbar(),
-            ],
-        ),
-      )
-      
-      
             
-
       );
+      
+      
   }
 }

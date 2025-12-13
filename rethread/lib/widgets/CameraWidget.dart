@@ -9,6 +9,8 @@ import 'package:rethread/database/Database.dart';
 import 'package:rethread/pages/SummaryPage.dart';
 import 'package:rethread/templates/TemplateBackground.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image/image.dart' as img;
+import 'package:tflite_flutter/tflite_flutter.dart';
 
 class CameraWidget extends StatefulWidget {
   const CameraWidget({super.key});
@@ -24,10 +26,17 @@ class CamerawidgetState extends State<CameraWidget> {
   List<CameraDescription>? cameras;
   bool isProcessing = false;
 
+  Interpreter? _interpreter;
+  List<String>? _labels;
+  final int imageSize = 224;
+  final List<double> mean = [0.485, 0.456, 0.406];
+  final List<double> std = [0.229, 0.224, 0.225];
+
   @override
   void initState() {
     super.initState();
     _initCamera();
+    _loadModel();
   }
 
   Future<void> _initCamera() async {
@@ -36,6 +45,23 @@ class CamerawidgetState extends State<CameraWidget> {
     await controller!.initialize();
     if (!mounted) return;
     setState(() {});
+  }
+
+  Future<void> _loadModel() async {
+    try {
+      print("🔄 Loading ShuffleNet model...");
+      _interpreter = await Interpreter.fromAsset(
+        'assets/models/shufflenet_nchw.tflite',
+      );
+      print("✅ Model loaded successfully!");
+
+      print("🔄 Loading labels...");
+      final labelsData = await rootBundle.loadString('assets/models/labels.txt');
+      _labels = labelsData.split('\n').where((e) => e.trim().isNotEmpty).toList();
+      print("Labels loaded: $_labels");
+    } catch (e) {
+      print("Error loading model: $e");
+    }
   }
 
   Future<String> _getAIDescription(String imagePath, String classification) async {
@@ -128,6 +154,71 @@ class CamerawidgetState extends State<CameraWidget> {
     }
   }
 
+  Future<String?> _predictWithShuffleNet(String imagePath) async {
+    if (_interpreter == null || _labels == null) {
+      print("Model or labels not loaded");
+      return null;
+    }
+
+    try {
+      print("Loading image from: $imagePath");
+      final imageFile = File(imagePath);
+      final imageBytes = await imageFile.readAsBytes();
+
+      img.Image? image = img.decodeImage(imageBytes);
+      if (image == null) throw Exception('Failed to decode image');
+
+      print("📷 Resizing image to ${imageSize}x$imageSize");
+      image = img.copyResize(image, width: imageSize, height: imageSize);
+
+      // Create input tensor in NCHW format: [1, 3, 224, 224]
+      print("Preprocessing image (NCHW format)...");
+      var input = List.generate(1, (b) =>
+          List.generate(3, (c) =>
+              List.generate(imageSize, (y) =>
+                  List.generate(imageSize, (x) {
+                    final pixel = image!.getPixel(x, y);
+                    double value;
+                    if (c == 0) {
+                      value = pixel.r.toDouble();
+                    } else if (c == 1) {
+                      value = pixel.g.toDouble();
+                    } else {
+                      value = pixel.b.toDouble();
+                    }
+                    // Normalize: (pixel/255 - mean) / std
+                    return (value / 255.0 - mean[c]) / std[c];
+                  })
+              )
+          )
+      );
+
+      // Output buffer [1, 3]
+      var output = List.generate(1, (_) => List<double>.filled(3, 0.0));
+
+      print("🔄 Running inference...");
+      _interpreter!.run(input, output);
+      print("✅ Inference successful!");
+      print("Raw output scores: ${output[0]}");
+
+      // Find best class
+      int bestIndex = 0;
+      double bestScore = output[0][0];
+      for (int i = 1; i < 3; i++) {
+        if (output[0][i] > bestScore) {
+          bestScore = output[0][i];
+          bestIndex = i;
+        }
+      }
+
+      print("Prediction: ${_labels![bestIndex]}");
+      return _labels![bestIndex];
+    } catch (e) {
+      print("ShuffleNet prediction error: $e");
+      return null;
+    }
+  }
+
   Future<void> _takePhoto() async {
     if (!controller!.value.isInitialized || isProcessing) return;
     
@@ -141,13 +232,17 @@ class CamerawidgetState extends State<CameraWidget> {
       
       final image = await controller!.takePicture();
       final imageFile = File(image.path);
-      
-      final classification = null;
+      String? classification;
 
-      if (selectedValue == "Classical Feature Extraction"){final classification = await _predictClothingFromAPI(imageFile);}
-      // MASUKIN SINI YA CODINGAN MODEL DEEPLEARNINGNYA
-      else{final classification = await _predictClothingFromAPI(imageFile);}
-      // final classification = "ehe";
+      if (selectedValue == "Classical Feature Extraction") {
+        print("Using Classical Feature Extraction");
+        classification = await _predictClothingFromAPI(imageFile);
+      } else if (selectedValue == "Deep Learning Model") {
+        print("Using Deep Learning Model (ShuffleNet)");
+        classification = await _predictWithShuffleNet(image.path);
+      } else {
+        throw Exception("Please select a model first");
+      }
 
       if (classification == null) {
         throw Exception("Failed to classify image");
@@ -157,14 +252,14 @@ class CamerawidgetState extends State<CameraWidget> {
       
       // TODO: Replace this with your actual classification model
       // For now using mock classifications
-      
+      final String finalClassification = classification;
       // Get AI description
       // KALAU KAMU NANYA IMAGENYA DAPET DARI MANA SETELAH DI AMBIL, PAKAI 'image.path' YAAA
-      final description = await _getAIDescription(image.path, classification);
+      final description = await _getAIDescription(image.path, finalClassification);
 
       await ScanHistoryDatabase.instance.insertScan(
         imagePath: image.path,
-        classification: classification,
+        classification: finalClassification,
         aiDescription: description,
       );
 
@@ -178,7 +273,7 @@ class CamerawidgetState extends State<CameraWidget> {
         MaterialPageRoute(
           builder: (context) => Summarypage(
             imagePath: image.path,
-            classification: classification,
+            classification: finalClassification,
             aiDescription: description,
           ),
         ),
@@ -202,6 +297,7 @@ class CamerawidgetState extends State<CameraWidget> {
   @override
   void dispose() {
     controller?.dispose();
+    _interpreter?.close();
     super.dispose();
   }
 

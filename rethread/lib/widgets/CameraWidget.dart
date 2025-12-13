@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:rethread/common/colors.dart';
+import 'package:rethread/common/fonts.dart';
 import 'package:rethread/database/Database.dart';
 import 'package:rethread/pages/SummaryPage.dart';
 import 'package:rethread/templates/TemplateBackground.dart';
@@ -22,7 +23,7 @@ class CameraWidget extends StatefulWidget {
 class CamerawidgetState extends State<CameraWidget> {
   CameraController? controller;
   String? selectedValue;
-  final List<String> items = ['Deep Learning Model', 'Classical Feature Extraction'];
+  final List<String> items = ['ShuffleNetV2', 'HOG + Color Histogram -> SVM'];
   List<CameraDescription>? cameras;
   bool isProcessing = false;
 
@@ -49,13 +50,13 @@ class CamerawidgetState extends State<CameraWidget> {
 
   Future<void> _loadModel() async {
     try {
-      print("🔄 Loading ShuffleNet model...");
+      print("Loading ShuffleNet model...");
       _interpreter = await Interpreter.fromAsset(
         'assets/models/shufflenet_nchw.tflite',
       );
-      print("✅ Model loaded successfully!");
+      print("Model loaded successfully!");
 
-      print("🔄 Loading labels...");
+      print("Loading labels...");
       final labelsData = await rootBundle.loadString('assets/models/labels.txt');
       _labels = labelsData.split('\n').where((e) => e.trim().isNotEmpty).toList();
       print("Labels loaded: $_labels");
@@ -168,7 +169,7 @@ class CamerawidgetState extends State<CameraWidget> {
       img.Image? image = img.decodeImage(imageBytes);
       if (image == null) throw Exception('Failed to decode image');
 
-      print("📷 Resizing image to ${imageSize}x$imageSize");
+      print("Resizing image to ${imageSize}x$imageSize");
       image = img.copyResize(image, width: imageSize, height: imageSize);
 
       // Create input tensor in NCHW format: [1, 3, 224, 224]
@@ -196,9 +197,9 @@ class CamerawidgetState extends State<CameraWidget> {
       // Output buffer [1, 3]
       var output = List.generate(1, (_) => List<double>.filled(3, 0.0));
 
-      print("🔄 Running inference...");
+      print("Running inference...");
       _interpreter!.run(input, output);
-      print("✅ Inference successful!");
+      print("Inference successful!");
       print("Raw output scores: ${output[0]}");
 
       // Find best class
@@ -234,10 +235,10 @@ class CamerawidgetState extends State<CameraWidget> {
       final imageFile = File(image.path);
       String? classification;
 
-      if (selectedValue == "Classical Feature Extraction") {
+      if (selectedValue == 'HOG + Color Histogram -> SVM') {
         print("Using Classical Feature Extraction");
         classification = await _predictClothingFromAPI(imageFile);
-      } else if (selectedValue == "Deep Learning Model") {
+      } else if (selectedValue == 'ShuffleNetV2') {
         print("Using Deep Learning Model (ShuffleNet)");
         classification = await _predictWithShuffleNet(image.path);
       } else {
@@ -362,14 +363,17 @@ class CamerawidgetState extends State<CameraWidget> {
         ),
 
       ),
+      const SizedBox(height: 20),
         DropdownButton<String>(
+              padding: EdgeInsets.symmetric(horizontal: 37),
               value: selectedValue,
               hint: Text('Select an option'),
               isExpanded: true,
+              dropdownColor: backgroundBlue,
               items: items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
-                  child: Text(item),
+                  child: Text(item, style: SummaryText(16),),
                 );
               }).toList(),
               onChanged: (String? newValue) {
